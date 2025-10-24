@@ -1,0 +1,87 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inria+Serif:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Paprika&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span {
+    @apply text-[#333333]; /* soft dark gray */
+  }
+
+  h1 {
+    @apply font-Poppins lg:text-6xl text-3xl font-extrabold;
+  }
+  h2 {
+    @apply font-Inria text-5xl font-bold;
+  }
+  h3 {
+    @apply font-Paprika text-5xl;
+  }
+  h4 {
+    @apply md:text-4xl text-3xl !leading-relaxed font-Paprika;
+  }
+  h6 {
+    @apply font-Paprika font-bold leading-8;
+  }
+
+  p {
+    @apply font-Poppins text-[0.95rem] text-[#555555]; /* secondary gray */
+  }
+  button {
+    @apply font-Poppins;
+  }
+  input,
+  textarea {
+    @apply bg-transparent outline-none font-Poppins;
+  }
+}
+
+@layer utilities {
+  .btn {
+    @apply py-2 px-9 rounded-md font-medium;
+    border: 2px solid #C6A87D; /* beige border */
+    border-radius: 0 0 1.5rem 0; /* rounded-br-3xl */
+  }
+  .btn:hover {
+    background-color: #B79362; /* hover beige */
+    color: white;
+  }
+
+  .title {
+    @apply md:text-3xl text-2xl text-[#333333];
+  }
+  .subtitle {
+    @apply text-[#555555];
+  }
+
+  .logo {
+    @apply w-48 h-48 mx-auto my-12;
+  }
+}
+
+/* Swiper bullets for beige theme */
+.swiper-pagination-bullet {
+  @apply w-3 h-3;
+  background-color: #C6A87D;
+  opacity: 0.6;
+}
+.swiper-pagination-bullet-active {
+  background-color: #B79362;
+  opacity: 1;
+}
