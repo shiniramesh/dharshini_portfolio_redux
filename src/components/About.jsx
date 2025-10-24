@@ -1,15 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Aos from "aos";
 import "aos/dist/aos.css";
 
 const About = ({ content }) => {
   const { title, subtitle, image1, image2, para, btnText } = content;
   const [showResume, setShowResume] = useState(false);
+  const [closing, setClosing] = useState(false); // For smooth fade-out
+  const modalRef = useRef(null);
 
   // Initialize AOS
   useEffect(() => {
     Aos.init({ duration: 1200, offset: 100, once: true });
   }, []);
+
+  // Smooth close function
+  const closeModal = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setShowResume(false);
+      setClosing(false);
+    }, 300); // match CSS transition
+  };
+
+  // Close popup on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (showResume) {
+        closeModal();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [showResume]);
+
+  // Close popup on clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeModal();
+      }
+    };
+    if (showResume) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showResume]);
 
   return (
     <section
@@ -73,14 +108,22 @@ const About = ({ content }) => {
 
       {/* Resume Popup */}
       {showResume && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 md:p-10 rounded-xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] flex flex-col shadow-lg">
-            
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50 transition-opacity ${
+            closing ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <div
+            ref={modalRef}
+            className={`bg-white p-6 md:p-10 rounded-xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] flex flex-col shadow-lg transform transition-transform ${
+              closing ? "scale-95" : "scale-100"
+            }`}
+          >
             {/* Header with close button */}
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-[#333333]">My Resume</h3>
               <button
-                onClick={() => setShowResume(false)}
+                onClick={closeModal}
                 aria-label="Close resume"
                 className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#E0D8CC] text-[#555555] hover:text-[#333333]"
               >
@@ -101,7 +144,7 @@ const About = ({ content }) => {
             <div className="mt-4 flex justify-center">
               <a
                 href="/resume.pdf"
-                download
+                download="Dharshini_Ramesh_Babu_Resume.pdf"
                 className="px-6 py-2 bg-[#C6A87D] text-white rounded-md hover:bg-[#B79362] transition-colors"
               >
                 Download Resume

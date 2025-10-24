@@ -1,8 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Main_Page = ({ content }) => {
   const { title, firstName, LastName, btnText, Main_Page_content, image } = content;
   const [showPopup, setShowPopup] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const popupRef = useRef(null);
+
+  const closePopup = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setShowPopup(false);
+      setClosing(false);
+    }, 150); // fast fade
+  };
+
+  // Close on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (showPopup) closePopup();
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [showPopup]);
+
+  // Close on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
+        closePopup();
+      }
+    };
+    if (showPopup) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showPopup]);
 
   return (
     <section id="home" className="min-h-screen flex flex-col md:flex-row">
@@ -10,7 +40,7 @@ const Main_Page = ({ content }) => {
       <div className="w-full md:w-3/5 bg-[#F5F1EB] flex flex-col justify-center px-6 md:px-12 py-20">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">{title}</h2>
 
-        {/* About Me button - compact */}
+        {/* About Me button */}
         <button
           className="bg-[#C6A87D] text-white px-4 py-2 rounded-md hover:bg-[#B79362] self-start"
           onClick={() => setShowPopup(true)}
@@ -53,20 +83,26 @@ const Main_Page = ({ content }) => {
         </div>
       </div>
 
-      {/* Intro Popup */}
+      {/* About Me Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-xl max-w-md text-center relative">
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-150 ${
+            closing ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <div
+            ref={popupRef}
+            className="bg-white p-8 rounded-xl max-w-md text-center relative shadow-lg"
+          >
             <h3 className="text-xl font-bold mb-4">About Me</h3>
             <p className="mb-6">
               I am an Interaction and Experience Design enthusiast with
               experience in Unity, Python & React.js. I enjoy building
               interactive applications and designing engaging user experiences.
             </p>
-            {/* Oval Close button */}
             <button
-              className="bg-[#C6A87D] text-white px-6 py-2 rounded-full hover:bg-[#B79362]"
-              onClick={() => setShowPopup(false)}
+              className="bg-[#C6A87D] text-white px-6 py-2 rounded-full hover:bg-[#B79362] transition-colors"
+              onClick={closePopup}
             >
               Close
             </button>

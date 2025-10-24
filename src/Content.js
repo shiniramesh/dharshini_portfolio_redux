@@ -104,8 +104,8 @@ export const content = {
     subtitle: "A FEW HIGHLIGHTS",
     image1: About_person,
     image2: About_person,
-    para: "I am an Interaction & Experience Design master’s student...", // short preview
-    btnText: "Read More",
+    para: "My Resume", // short preview
+    btnText: "Click",
   },
 
   Contact: {
